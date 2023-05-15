@@ -1,42 +1,16 @@
 #![allow(dead_code, unused_variables)]
-mod database {
-    pub enum Status {
-        Connected,
-        Interrupted,
-    }
+use rand::prelude::*;
 
-    pub fn connect_to_database() -> Status {
-        return Status::Connected;
-    }
+mod auth_utils;
+pub mod database;
 
-    pub fn get_user() {
-        // get user from databse
-    }
-}
-
-mod auth_utils {
-
-    pub fn login(creds: models::Credentials) {
-        crate::database::get_user();
-    }
-
-    fn logout() {
-        // logout
-    }
-
-    pub mod models {
-        pub struct Credentials {
-            username: String,
-            password: String,
-        }
-    }
-}
-
-use auth_utils::models::Credentials;
+pub use auth_utils::models::Credentials;
 use database::Status;
 
 pub fn authenticate(creds: Credentials) {
+    let timeout = thread_rng().gen_range(100..500);
+    println!("The timeout is {timeout}");
     if let Status::Connected = database::connect_to_database() {
-        auth_utils::login(creds)
+        auth_utils::login(creds);
     }
 }
